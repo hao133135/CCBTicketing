@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.jilian.ccbticketing">
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".Activity.LoginActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".Activity.MenuActivity"
+            android:alwaysRetainTaskState="true">
+        </activity>
+        <activity android:name=".Activity.Sell.SellActivity"
+            android:alwaysRetainTaskState="true">
+        </activity>
+        <activity android:name=".Activity.Sell.SellPaymentActivity"
+            android:alwaysRetainTaskState="true">
+        </activity>
+        <activity android:name=".Activity.Sell.PaySuccess"
+            android:alwaysRetainTaskState="true">
+        </activity>
+        <activity android:name=".Activity.Sell.PayFail"
+            android:alwaysRetainTaskState="true">
+        </activity>
+        <activity android:name=".Activity.Check.CheckActivity"
+            android:alwaysRetainTaskState="true">
+        </activity>
+        <activity android:name=".Activity.Query.QueryActivity"
+            android:alwaysRetainTaskState="true">
+        </activity>
+        <activity android:name=".Activity.Query.RefundActivity"
+            android:alwaysRetainTaskState="true">
+        </activity>
+        <activity android:name=".Activity.Query.RefundSuccessActivity"
+            android:alwaysRetainTaskState="true">
+        </activity>
+        <activity android:name=".Activity.Query.RefundFailActivity"
+            android:alwaysRetainTaskState="true">
+        </activity>
+        <activity android:name=".Activity.Query.AccountActivity"
+            android:alwaysRetainTaskState="true">
+        </activity>
+        <activity android:name=".Activity.SetActivity"
+            >
+        </activity>
+        <activity android:name=".Activity.SetMenuActivity"
+            android:alwaysRetainTaskState="true">
+        </activity>
+        <activity android:name=".Uitls.zxing.activity.CaptureActivity"
+            android:alwaysRetainTaskState="true">
+        </activity>
+
+    </application>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.FLASHLIGHT" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <!-- 使用密码键盘设备功能的权限 -->
+    <uses-permission android:name="smartpos.deviceservice.permission.Pinpad"/>
+    <!-- 使用磁条读卡器设备功能的权限 -->
+    <uses-permission android:name="smartpos.deviceservice.permission.MagReader"/>
+    <!-- 使用IC读卡器设备功能的权限 -->
+    <uses-permission android:name="smartpos.deviceservice.permission.ICReader"/>
+    <!-- 使用非接触IC卡读卡器设备功能的权限 -->
+    <uses-permission android:name="smartpos.deviceservice.permission.RFReader"/>
+    <!-- 使用打印机设备功能的权限 -->
+    <uses-permission android:name="smartpos.deviceservice.permission.Printer"/>
+    <!-- 使用PBOC金融交互流程功能的权限 -->
+    <uses-permission android:name="smartpos.deviceservice.permission.PBOC"/>
+    <!-- 使用条码扫描设备功能的权限 -->
+    <uses-permission android:name="smartpos.deviceservice.permission.Scanner"/>
+    <!-- 使用蜂鸣器设备功能的权限 -->
+    <uses-permission android:name="smartpos.deviceservice.permission.Beeper"/>
+    <!-- 使用获取终端设备功能的权限 -->
+    <uses-permission android:name="smartpos.deviceservice.permission.DeviceInfo"/>
+    <!-- 使用串口设备功能的权限 -->
+    <uses-permission android:name="smartpos.deviceservice.permission.SerialPort"/>
+    <!-- 使用LED灯设备功能的权限 -->
+    <uses-permission android:name="smartpos.deviceservice.permission.Led"/>
+    <!-- 使用PSAM卡读卡器设备功能的权限 -->
+    <uses-permission android:name="smartpos.deviceservice.permission.PsamCardReader"/>
+    <!-- 使用二代证设备读卡器功能的权限 -->
+    <uses-permission android:name="smartpos.deviceservice.permission.IDCardReader"/>
+    <!-- 使用钱箱设备功能的权限 -->
+    <uses-permission android:name="smartpos.deviceservice.permission.CashBox"/>
+    <!-- 使用参数文件功能的权限 -->
+    <uses-permission android:name="smartpos.deviceservice.permission.ParamFile"/>
+    <!-- 使用签字板功能的权限 -->
+    <uses-permission android:name="smartpos.deviceservice.permission.SignPanel"/>
+    <!-- 使用底座功能的权限 -->
+    <uses-permission android:name="smartpos.deviceservice.permission.Pedestal"/>
+</manifest>

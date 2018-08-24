@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include layout="@layout/query_title"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/query_refund_btn"
+            android:layout_width="250dp"
+            android:layout_height="80dp"
+            android:text="查询退票"
+            android:textSize="24dp"
+            android:textStyle="bold"
+            android:background="@drawable/ticketing_menu_check_btn"
+            />
+
+
+        <Button
+            android:id="@+id/query_account_btn"
+            android:layout_width="250dp"
+            android:layout_height="80dp"
+            android:layout_marginTop="100dp"
+            android:text="日结账目"
+            android:textSize="24dp"
+            android:textStyle="bold"
+            android:background="@drawable/ticketing_menu_query_btn_r"
+            />
+
+
+    </RelativeLayout>
+
+</android.support.constraint.ConstraintLayout>

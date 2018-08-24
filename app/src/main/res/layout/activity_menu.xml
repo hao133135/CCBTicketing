@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include layout="@layout/ticketing_title"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/ticketing_menu_sell_btn"
+            android:layout_width="150dp"
+            android:layout_height="80dp"
+            android:layout_marginRight="5dp"
+            android:paddingTop="20dp"
+            android:text="售票"
+            android:background="@drawable/ticketing_menu_check_btn"
+            android:drawableTop="@drawable/vj"
+
+            />
+
+        <Button
+            android:id="@+id/ticketing_menu_check_btn"
+            android:layout_width="150dp"
+            android:layout_height="80dp"
+            android:layout_marginLeft="5dp"
+            android:paddingTop="20dp"
+            android:layout_toRightOf="@+id/ticketing_menu_sell_btn"
+            android:text="检票"
+            android:background="@drawable/ticketing_menu_sell_btn"
+            android:drawableTop="@drawable/vh"
+            />
+
+        <Button
+            android:id="@+id/ticketing_menu_query_btn"
+            android:layout_width="150dp"
+            android:layout_height="80dp"
+            android:layout_marginTop="100dp"
+            android:layout_marginRight="5dp"
+            android:paddingTop="20dp"
+            android:text="查询"
+            android:background="@drawable/ticketing_menu_query_btn"
+            android:drawableTop="@drawable/vm"
+            />
+
+        <Button
+            android:id="@+id/ticketing_menu_set_btn"
+            android:layout_width="150dp"
+            android:layout_height="80dp"
+            android:layout_marginLeft="5dp"
+            android:paddingTop="20dp"
+            android:layout_marginTop="100dp"
+            android:layout_toRightOf="@+id/ticketing_menu_query_btn"
+            android:text="设置"
+            android:background="@drawable/ticketing_menu_signout_btn"
+            android:drawableTop="@drawable/vk"
+            />
+    </RelativeLayout>
+
+</android.support.constraint.ConstraintLayout>

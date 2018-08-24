@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include layout="@layout/set_title"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/query_set_btn"
+            android:layout_width="250dp"
+            android:layout_height="80dp"
+            android:text="设  置"
+            android:textSize="24dp"
+            android:textStyle="bold"
+            android:background="@drawable/ticketing_menu_check_btn"
+            />
+
+
+        <Button
+            android:id="@+id/query_ex_btn"
+            android:layout_width="250dp"
+            android:layout_height="80dp"
+            android:layout_marginTop="100dp"
+            android:text="退  出"
+            android:textSize="24dp"
+            android:textStyle="bold"
+            android:background="@drawable/ticketing_menu_query_btn_r"
+            />
+
+
+    </RelativeLayout>
+
+</android.support.constraint.ConstraintLayout>

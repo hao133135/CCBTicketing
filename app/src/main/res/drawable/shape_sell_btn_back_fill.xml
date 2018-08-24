@@ -1,0 +1,4 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="@color/sell_back_btn_1"/>
+    <corners android:radius="10dip"/>
+</shape>

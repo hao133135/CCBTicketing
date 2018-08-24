@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="45dp"
+        android:background="@color/back">
+        <!--<ImageButton
+            android:id="@+id/sell_page_back_btn"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:background="@drawable/back_normal"
+            />-->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:gravity="center"
+            android:text="泸沽湖票务智能终端"
+            android:textSize="@dimen/title_textSize"
+            android:textColor="@color/white"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/sell_login_set_btn"
+            android:layout_width="50dp"
+            android:layout_height="30dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="12dp"
+            android:background="@color/ash"
+            android:gravity="center"
+            android:text="设置"
+            android:textSize="14dp" />
+    </RelativeLayout>
+</android.support.constraint.ConstraintLayout>

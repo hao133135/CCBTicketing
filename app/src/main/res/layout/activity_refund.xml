@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@color/sell_back">
+        <include layout="@layout/query_refund_title"/>
+        <LinearLayout
+            android:layout_width="300dp"
+            android:layout_height="45dp"
+            android:orientation="horizontal"
+            android:background="@drawable/shape_sell_btn_back_fill1"
+            android:layout_marginTop="20dp"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:layout_gravity="center">
+            <ImageView
+                android:id="@+id/refund_scan_btn"
+                android:layout_width="50dp"
+                android:layout_height="25dp"
+                android:paddingLeft="2dp"
+                android:paddingRight="2dp"
+                android:layout_gravity="center"
+                android:src="@drawable/qmn"
+                android:background="@null"/>
+            <EditText
+                android:id="@+id/refund_query_edit"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:layout_weight="1"
+                android:gravity="center|left"
+                android:paddingLeft="10dp"/>
+
+            <ImageView
+                android:id="@+id/refund_query_btn"
+                android:layout_width="50dp"
+                android:layout_height="25dp"
+                android:layout_gravity="center|left"
+                android:background="@null"
+                android:src="@drawable/check_vm"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="285dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/shape_sell_solid"
+            android:orientation="vertical"
+            android:paddingBottom="10dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="10dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:layout_gravity="center"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="序号" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="0.8"
+                    android:gravity="center"
+                    android:text="票种" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="状态" />
+
+
+            </LinearLayout>
+
+            <ListView
+                android:id="@+id/refund_query_listview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            </ListView>
+
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:paddingTop="10dp"
+            android:paddingRight="10dp"
+            android:paddingLeft="10dp"
+            android:paddingBottom="10dp"
+            android:orientation="horizontal"
+            android:background="@drawable/shape_sell_solid">
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="退票原因" />
+
+         <Spinner
+             android:id="@+id/refund_ticket_message"
+             android:layout_width="match_parent"
+             android:layout_height="30dp"></Spinner>
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/refund_refund_btn"
+            android:layout_width="300dp"
+            android:layout_height="45dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_gravity="center"
+            android:background="@drawable/shape_sell_btn_back_fill"
+            android:text="退 票"
+            android:textColor="@color/white"
+            android:textSize="@dimen/activity_vertical_margin" />
+
+    </LinearLayout>
+</android.support.constraint.ConstraintLayout>

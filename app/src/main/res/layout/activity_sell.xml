@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/sell_back"
+        android:orientation="vertical">
+        <include layout="@layout/sell_title"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@color/white"
+            >
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.8"
+                android:text="票种选择"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:textColor="@android:drawable/screen_background_dark"
+                />
+            >
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="价  格"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:textColor="@android:drawable/screen_background_dark"
+                />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="购买数量"
+                android:textSize="@dimen/acceptance_hint"
+                android:gravity="center"
+                android:textColor="@android:drawable/screen_background_dark"/>
+
+        </LinearLayout>
+
+        <ListView
+            android:id="@+id/sell_ticket_listview"
+            android:layout_width="match_parent"
+            android:layout_height="304dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1"
+            android:background="@color/white"></ListView>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:background="@drawable/shape_edit_back_r">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="手机号："
+                android:layout_gravity="center"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"/>
+            <EditText
+                android:id="@+id/sell_phone_edit_text"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:hint="请输入正确的手机号码！"
+                android:digits="1234567890"
+                android:background="@null"
+                android:layout_gravity="center"
+                android:layout_marginRight="5dp"/>
+        </LinearLayout>
+        <Button
+            android:id="@+id/sell_page_pay_btn"
+            android:layout_width="300dp"
+            android:layout_height="45dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="10dp"
+            android:layout_gravity="center"
+            android:background="@drawable/shape_sell_btn_back_fill"
+            android:text="确  认"
+            android:textColor="@color/white"
+            android:textSize="@dimen/activity_vertical_margin" />
+    </LinearLayout>
+</android.support.constraint.ConstraintLayout>
