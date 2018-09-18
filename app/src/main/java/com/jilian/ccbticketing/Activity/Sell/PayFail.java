@@ -19,6 +19,7 @@ import com.jilian.ccbticketing.Model.SellListModel;
 import com.jilian.ccbticketing.Model.SellModel;
 import com.jilian.ccbticketing.R;
 import com.jilian.ccbticketing.Uitls.Configuration;
+import com.jilian.ccbticketing.Uitls.clickUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,10 +64,14 @@ public class PayFail extends AppCompatActivity implements View.OnClickListener {
         switch (v.getId())
         {
             case R.id.pay_fail_return_btn:
-                returnMethod();
+                if(clickUtils.isFastClick()){
+                    returnMethod();
+                }
                 break;
             case R.id.sell_pay_result_page_back_btn:
-                backBtn();
+                if(clickUtils.isFastClick()){
+                    backBtn();
+                }
                 break;
         }
     }

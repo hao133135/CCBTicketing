@@ -9,7 +9,6 @@ import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -39,6 +38,7 @@ import com.jilian.ccbticketing.Uitls.Commontools;
 import com.jilian.ccbticketing.Uitls.Configuration;
 import com.jilian.ccbticketing.Uitls.Constant;
 import com.jilian.ccbticketing.Uitls.HttpUtils;
+import com.jilian.ccbticketing.Uitls.clickUtils;
 import com.jilian.ccbticketing.Uitls.zxing.activity.CaptureActivity;
 
 import org.json.JSONArray;
@@ -70,8 +70,7 @@ public class RefundActivity extends Commontools implements View.OnClickListener 
     private HttpUtils httpUtils = new HttpUtils();
     private Configuration configuration = new Configuration();
     private int type;
-    private String traceNo,msg;
-    private String payOrder;
+    private String traceNo,msg,payOrder,DPDSvcID;
     private Handler handler = new Handler();
 
     @Override
@@ -100,6 +99,7 @@ public class RefundActivity extends Commontools implements View.OnClickListener 
         String serviceport=sharedPreferences.getString("port","");
         String mac = sharedPreferences.getString("mac","");
         String serialNo = sharedPreferences.getString("serialNo","");
+        String operatorId = sharedPreferences.getString("posuser","");
         String token = sharedPreferences.getString("token","");
         baseModel=new BaseModel();
         baseModel.setIp(serviceip);
@@ -107,6 +107,7 @@ public class RefundActivity extends Commontools implements View.OnClickListener 
         baseModel.setMachineID(mac);
         baseModel.setSerialNo(serialNo);
         baseModel.setToken(token);
+        baseModel.setOperatorId(operatorId);
         new SpinnerTask().execute();
     }
 
@@ -115,52 +116,58 @@ public class RefundActivity extends Commontools implements View.OnClickListener 
         switch (v.getId())
         {
             case R.id.refund_scan_btn:
-                ticketModels.clear();
-                scanMethod();
+                if(clickUtils.isFastClick()) {
+                    ticketModels.clear();
+                    scanMethod();
+                }
                 break;
             case R.id.refund_query_btn:
-                if (editText.getText().toString()!=null&&!"".equals(editText.getText().toString()))
-                {
-                    ticketModels.clear();
-                    barcode = editText.getText().toString();
-                    getData();
-                }else {
-                    msg = "请扫码或者输入二维码";
-                    handler.post(toast);
+                if(clickUtils.isFastClick()) {
+                    if (editText.getText().toString() != null && !"".equals(editText.getText().toString())) {
+                        ticketModels.clear();
+                        barcode = editText.getText().toString();
+                        getData();
+                    } else {
+                        msg = "请扫码或者输入二维码";
+                        handler.post(toast);
+                    }
                 }
                 break;
             case R.id.refund_refund_btn:
-                if (editText.getText().toString()!=null&&!"".equals(editText.getText().toString()))
-                {
-                    new AlertDialog.Builder(RefundActivity.this)
-                            .setTitle("退票提示")
-                            .setMessage("\n\t\t\t\t是否退票！\t\n")
-                            .setNegativeButton("确认",
-                                    new DialogInterface.OnClickListener() {
+                if(clickUtils.isFastClick()) {
+                    if (editText.getText().toString() != null && !"".equals(editText.getText().toString())) {
+                        new AlertDialog.Builder(RefundActivity.this)
+                                .setTitle("退票提示")
+                                .setMessage("\n\t\t\t\t是否退票！\t\n")
+                                .setNegativeButton("确认",
+                                        new DialogInterface.OnClickListener() {
 
-                                        @Override
-                                        public void onClick(DialogInterface dialog,
-                                                            int which) {
-                                            refundResult();
-                                            dialog.dismiss();
-                                        }
-                                    })
-                            .setPositiveButton("取消",
-                                    new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog,
+                                                                int which) {
+                                                refundResult();
+                                                dialog.dismiss();
+                                            }
+                                        })
+                                .setPositiveButton("取消",
+                                        new DialogInterface.OnClickListener() {
 
-                                        @Override
-                                        public void onClick(DialogInterface dialog,
-                                                            int which) {
-                                            dialog.dismiss();
-                                        }
-                                    }).show();
-                }else {
-                    msg = "请扫码或者输入二维码";
-                    handler.post(toast);
+                                            @Override
+                                            public void onClick(DialogInterface dialog,
+                                                                int which) {
+                                                dialog.dismiss();
+                                            }
+                                        }).show();
+                    } else {
+                        msg = "请扫码或者输入二维码";
+                        handler.post(toast);
+                    }
                 }
                 break;
             case R.id.query_refund_page_back_btn:
-                backBtn();
+                if(clickUtils.isFastClick()){
+                    backBtn();
+                }
                 break;
         }
     }
@@ -172,9 +179,10 @@ public class RefundActivity extends Commontools implements View.OnClickListener 
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        map.clear();
         map.put("channel","POS");
         map.put("machineID",baseModel.getMachineID());
-        map.put("operatorId","123");
+        map.put("operatorId",baseModel.getOperatorId());
         map.put("data",data);
         new Thread(new Runnable() {
             @Override
@@ -242,7 +250,6 @@ public class RefundActivity extends Commontools implements View.OnClickListener 
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject = new JSONObject(data);
-            Looper.prepare();
            if (jsonObject.getInt("code")==200){
                 if(mc.equals("query")) {
                     try {
@@ -265,6 +272,7 @@ public class RefundActivity extends Commontools implements View.OnClickListener 
                         type = jsonObject1.getInt("payType");
                         traceNo=jsonObject1.getString("traceNo");
                         payOrder = jsonObject1.getString("payOrder");
+                        DPDSvcID = jsonObject1.getString("DPDSvcID");
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -297,7 +305,6 @@ public class RefundActivity extends Commontools implements View.OnClickListener 
                 msg = jsonObject.getString("msg");
                 handler.post(toast);
             }
-            Looper.loop();
         } catch (JSONException e) {
             msg = "服务器链接失败";
             handler.post(toast);
@@ -312,19 +319,25 @@ public class RefundActivity extends Commontools implements View.OnClickListener 
     {
         JSONObject jsonObject =new JSONObject();
         try {
-
             if (type==1){
                 jsonObject.put("lsOrderNo", payOrder);
                 jsonObject.put("inputRemarkInfo","银行卡退款");
-
             }else if (type==2) {
-                jsonObject.put("amt", "000000000001");//0.01元
-                jsonObject.put("inputRemarkInfo","微信/支付宝退款");
+                if(DPDSvcID!=""&&!"".equals(DPDSvcID)){
+                    jsonObject.put("DPDSvcID",DPDSvcID);
+                    jsonObject.put("lsOrderNo", payOrder);
+                    jsonObject.put("inputRemarkInfo","龙支付退款");
+                }else {
+                    jsonObject.put("amt", "000000000001");//0.01元
+                    jsonObject.put("inputRemarkInfo","微信/支付宝退款");
+                }
             }else if(type==3) {
                 refundResult();
                 return;
             }
         } catch (JSONException e) {
+            msg = e.getMessage();
+            handler.post(toast);
             e.printStackTrace();
         }
 
@@ -332,11 +345,14 @@ public class RefundActivity extends Commontools implements View.OnClickListener 
         ComponentName compName = new ComponentName("com.ccb.smartpos.bankpay", "com.ccb.smartpos.bankpay.ui.MainActivity");
         intent.setComponent(compName);
         intent.putExtra("appName", "建行收单应用");
-        if(type==1){
+        if (type == 1) {
             intent.putExtra("transId", "撤销");
-        }else if(type==2)
-        {
-            intent.putExtra("transId", "微信/支付宝退货");
+        } else if (type == 2) {
+            if(DPDSvcID!=""&&!"".equals(DPDSvcID)){
+                intent.putExtra("transId", "龙支付退货");
+            }else {
+                intent.putExtra("transId", "微信/支付宝退货");
+            }
         }
         intent.putExtra("transData", jsonObject.toString());
         isScaning =false;
@@ -410,8 +426,19 @@ public class RefundActivity extends Commontools implements View.OnClickListener 
     }
 
     private void refundResult() {
-        map.put("payOrder", barcode);
-        map.put("reason", refundSpinner.getSelectedItem().toString());
+        map.clear();
+        JSONObject data = new JSONObject();
+        try {
+            data.put("payOrder",barcode);
+            data.put("reason",refundSpinner.getSelectedItem().toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        map.clear();
+        map.put("channel","POS");
+        map.put("machineID",baseModel.getMachineID());
+        map.put("operatorId",baseModel.getOperatorId());
+        map.put("data",data);
         new Thread(new Runnable() {
             @Override
             public void run() {

@@ -30,6 +30,7 @@ import com.jilian.ccbticketing.Model.SettingModel;
 import com.jilian.ccbticketing.R;
 import com.jilian.ccbticketing.Uitls.Configuration;
 import com.jilian.ccbticketing.Uitls.HttpUtils;
+import com.jilian.ccbticketing.Uitls.clickUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -101,7 +102,9 @@ public class SellPaymentActivity extends AppCompatActivity implements View.OnCli
         String mac = sharedPreferences.getString("mac","");
         String serialNo = sharedPreferences.getString("serialNo","");
         String token = sharedPreferences.getString("token","");
+        String operatorId = sharedPreferences.getString("posuser","");
         baseModel=new BaseModel();
+        baseModel.setOperatorId(operatorId);
         baseModel.setIp(serviceip);
         baseModel.setPort(serviceport);
         baseModel.setMachineID(mac);
@@ -115,10 +118,14 @@ public class SellPaymentActivity extends AppCompatActivity implements View.OnCli
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.sell_payment_btn:
-                payMethod();
+                if(clickUtils.isFastClick()){
+                    payMethod();
+                }
                 break;
             case R.id.sell_pay_page_back_btn:
-                backBtn();
+                if(clickUtils.isFastClick()){
+                    backBtn();
+                }
                 break;
         }
     }
@@ -225,7 +232,6 @@ public class SellPaymentActivity extends AppCompatActivity implements View.OnCli
                 sellPayment(true);
             }
         }else if (data!=null) {
-
                 Bundle MarsBuddle = data.getExtras();
                 bankReturn = MarsBuddle.getString("resultCode");
                 Message = MarsBuddle.getString("resultMsg");
@@ -275,9 +281,10 @@ public class SellPaymentActivity extends AppCompatActivity implements View.OnCli
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        map.clear();
         map.put("channel","POS");
         map.put("machineID",baseModel.getMachineID());
-        map.put("operatorId","123");
+        map.put("operatorId",baseModel.getOperatorId());
         map.put("data",data);
         new Thread(new Runnable() {
             @Override
@@ -321,7 +328,7 @@ public class SellPaymentActivity extends AppCompatActivity implements View.OnCli
                     //提交数据
                     editor.commit();
                     msg = "登陆过期，请重新登录";
-                    handler.post(toast);
+                     handler.post(toast);
                     startActivity(configuration.getIntent(SellPaymentActivity.this,LoginActivity.class));
                     finish();
                 }else if (jsonObject.getInt("code")>0)

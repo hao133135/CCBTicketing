@@ -18,6 +18,7 @@ import com.jilian.ccbticketing.Model.DetailsModel;
 import com.jilian.ccbticketing.Model.QryorderModel;
 import com.jilian.ccbticketing.R;
 import com.jilian.ccbticketing.Uitls.Configuration;
+import com.jilian.ccbticketing.Uitls.clickUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,10 +55,14 @@ public class RefundSuccessActivity extends AppCompatActivity implements View.OnC
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.refund_success_home_btn:
-                homeMethod();
+                if(clickUtils.isFastClick()){
+                    homeMethod();
+                }
                 break;
             case R.id.refund_result_page_back_btn:
-                backBtn();
+                if(clickUtils.isFastClick()){
+                    backBtn();
+                }
                 break;
         }
     }

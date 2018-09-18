@@ -23,6 +23,7 @@ import com.jilian.ccbticketing.Uitls.Base64Utils;
 import com.jilian.ccbticketing.Uitls.Commontools;
 import com.jilian.ccbticketing.Uitls.Configuration;
 import com.jilian.ccbticketing.Uitls.HttpUtils;
+import com.jilian.ccbticketing.Uitls.clickUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -85,7 +86,9 @@ public class LoginActivity extends Commontools implements View.OnClickListener {
         pospwd = sharedPreferences.getString("pospwd","");
         String installDate = sharedPreferences.getString("InstallDate", null);
         userEdit.setText(localUser.toCharArray(),0,localUser.length());
+        String operatorId = sharedPreferences.getString("posuser","");
         baseModel=new BaseModel();
+        baseModel.setOperatorId(operatorId);
         baseModel.setIp(serviceip);
         baseModel.setPort(serviceport);
         baseModel.setMachineID(mac);
@@ -222,10 +225,14 @@ public class LoginActivity extends Commontools implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.ticketing_login_btn:
-                login();
+                if(clickUtils.isFastClick()){
+                    login();
+                }
                 break;
             case R.id.sell_login_set_btn:
-                configuration();
+                if(clickUtils.isFastClick()) {
+                    configuration();
+                }
                 break;
         }
     }
@@ -269,6 +276,7 @@ public class LoginActivity extends Commontools implements View.OnClickListener {
             msg="请输入用户名和密码";
             handler.post(toast);
         } else  {
+            map.clear();
             map.put("username", user);
             String p = Base64Utils.getBase64(pwd);
             map.put("password", p);
@@ -283,7 +291,7 @@ public class LoginActivity extends Commontools implements View.OnClickListener {
             }
             try{
                 Request request = new Request.Builder()//创建Request 对象。
-                        .url(  baseModel.getIp() + ":" + baseModel.getPort() + "/renren-admin/lgh/mpos/" + "login")
+                        .url(  baseModel.getIp() + "/lgh/mpos/" + "login")
                         .header("teller_code",baseModel.getSerialNo())
                         .addHeader("jwt", baseModel.getToken())
                         .post(formBody.build())//传递请求体
@@ -326,5 +334,6 @@ public class LoginActivity extends Commontools implements View.OnClickListener {
         startActivity(i);
         finish();
     }
+
 
 }

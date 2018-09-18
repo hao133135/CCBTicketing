@@ -13,6 +13,7 @@ import com.jilian.ccbticketing.Activity.MenuActivity;
 import com.jilian.ccbticketing.Activity.SetActivity;
 import com.jilian.ccbticketing.Model.BaseModel;
 import com.jilian.ccbticketing.R;
+import com.jilian.ccbticketing.Uitls.clickUtils;
 
 public class QueryActivity extends AppCompatActivity implements View.OnClickListener {
     private Button refundBtn,accountBtn;
@@ -42,13 +43,19 @@ public class QueryActivity extends AppCompatActivity implements View.OnClickList
         switch (v.getId())
         {
             case R.id.query_refund_btn:
-                toRefund();
+                if(clickUtils.isFastClick()){
+                    toRefund();
+                }
                 break;
             case R.id.query_account_btn:
-                toAccount();
+                if(clickUtils.isFastClick()){
+                    toAccount();
+                }
                 break;
             case R.id.query_page_back_btn:
-                backBtn();
+                if(clickUtils.isFastClick()){
+                    backBtn();
+                }
                 break;
         }
     }

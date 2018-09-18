@@ -30,11 +30,13 @@ import com.jilian.ccbticketing.R;
 import com.jilian.ccbticketing.Uitls.Commontools;
 import com.jilian.ccbticketing.Uitls.Configuration;
 import com.jilian.ccbticketing.Uitls.HttpUtils;
+import com.jilian.ccbticketing.Uitls.clickUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -86,7 +88,9 @@ public class SellActivity extends Commontools implements View.OnClickListener,Ad
         String mac = sharedPreferences.getString("mac","");
         String serialNo = sharedPreferences.getString("serialNo","");
         String token = sharedPreferences.getString("token","");
+        String operatorId = sharedPreferences.getString("posuser","");
         baseModel=new BaseModel();
+        baseModel.setOperatorId(operatorId);
         baseModel.setIp(serviceip);
         baseModel.setPort(serviceport);
         baseModel.setMachineID(mac);
@@ -99,10 +103,14 @@ public class SellActivity extends Commontools implements View.OnClickListener,Ad
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.sell_page_pay_btn:
-                toPayMent();
+                if(clickUtils.isFastClick()){
+                    toPayMent();
+                }
                 break;
             case R.id.sell_page_back_btn:
-                backBtn();
+                if(clickUtils.isFastClick()){
+                    backBtn();
+                }
                 break;
         }
     }
@@ -127,9 +135,10 @@ public class SellActivity extends Commontools implements View.OnClickListener,Ad
                 msg="请输入正确的手机号码";
                 handler.post(toast);
             }else {
+                map.clear();
                 map.put("channel","POS");
                 map.put("machineID",baseModel.getMachineID());
-                map.put("operatorId","123");
+                map.put("operatorId",baseModel.getOperatorId());
                 map.put("data","");
                 new Thread(new Runnable() {
                     @Override
@@ -175,9 +184,10 @@ public class SellActivity extends Commontools implements View.OnClickListener,Ad
             handler.post(toast);
             e.printStackTrace();
         }
+        map.clear();
         map.put("channel","POS");
         map.put("machineID",baseModel.getMachineID());
-        map.put("operatorId","123");
+        map.put("operatorId",baseModel.getOperatorId());
         map.put("data",data);
         new Thread(new Runnable() {
             @Override
@@ -221,7 +231,7 @@ public class SellActivity extends Commontools implements View.OnClickListener,Ad
                 JSONArray jsonArray = (JSONArray) tickets.get("tickets");
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject jsonObject1 = (JSONObject) jsonArray.get(i);
-                    SellModel s = new SellModel(jsonObject1.getString("id"),jsonObject1.getString("name"), jsonObject1.getDouble("price"), jsonObject1.getDouble("realPrice"));
+                    SellModel s = new SellModel(jsonObject1.getString("id"),jsonObject1.getString("name"), Double.parseDouble(doubleToString(jsonObject1.getDouble("price"))),Double.parseDouble(doubleToString(jsonObject1.getDouble("realPrice"))));
                     sellModelArrayList.add(s);
                 }
                 if(sellModelArrayList.size()>0) {
@@ -342,5 +352,13 @@ public class SellActivity extends Commontools implements View.OnClickListener,Ad
         }
         return super.onKeyDown(keyCode, event);
     }
-
+    /**
+     * double转String,保留小数点后两位
+     * @param num
+     * @return
+     */
+    public static String doubleToString(double num){
+        //使用0.00不足位补0，#.##仅保留有效位
+        return new DecimalFormat("0.00").format(num);
+    }
 }

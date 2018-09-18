@@ -22,6 +22,7 @@ import com.jilian.ccbticketing.Model.SellModel;
 import com.jilian.ccbticketing.R;
 import com.jilian.ccbticketing.Uitls.Configuration;
 import com.jilian.ccbticketing.Uitls.ZXingUtils;
+import com.jilian.ccbticketing.Uitls.clickUtils;
 import com.socsi.smartposapi.printer.Align;
 import com.socsi.smartposapi.printer.FontLattice;
 import com.socsi.smartposapi.printer.FontType;
@@ -68,13 +69,19 @@ public class PaySuccess extends AppCompatActivity implements View.OnClickListene
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.pay_success_print:
-                printMethod();
+                if(clickUtils.isFastClick()){
+                    printMethod();
+                }
                 break;
             case R.id.pay_success_return_home:
-                returnMethod();
+                if(clickUtils.isFastClick()){
+                    returnMethod();
+                }
                 break;
             case R.id.sell_pay_result_page_back_btn:
-                backBtn();
+                if(clickUtils.isFastClick()){
+                    backBtn();
+                }
                 break;
         }
     }

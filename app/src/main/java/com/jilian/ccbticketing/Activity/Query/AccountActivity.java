@@ -24,11 +24,13 @@ import com.jilian.ccbticketing.Model.CheckParameterModel;
 import com.jilian.ccbticketing.R;
 import com.jilian.ccbticketing.Uitls.Configuration;
 import com.jilian.ccbticketing.Uitls.HttpUtils;
+import com.jilian.ccbticketing.Uitls.clickUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -85,27 +87,38 @@ public class AccountActivity extends AppCompatActivity implements View.OnClickLi
         String mac = sharedPreferences.getString("mac","");
         String serialNo = sharedPreferences.getString("serialNo","");
         String token = sharedPreferences.getString("token","");
+        String operatorId = sharedPreferences.getString("posuser","");
         baseModel=new BaseModel();
+        baseModel.setOperatorId(operatorId);
         baseModel.setIp(serviceip);
         baseModel.setPort(serviceport);
         baseModel.setMachineID(mac);
         baseModel.setSerialNo(serialNo);
         baseModel.setToken(token);
+
     }
     @Override
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.account_query_btn:
-                queryMethod();
+                if(clickUtils.isFastClick()){
+                    queryMethod();
+                }
                 break;
             case R.id.account_home_btn:
-                backBtn();
+                if(clickUtils.isFastClick()){
+                    backBtn();
+                }
                 break;
             case R.id.account_page_back_btn:
-                backBtn();
+                if(clickUtils.isFastClick()){
+                    backBtn();
+                }
                 break;
             case R.id.account_time_btn:
-                setTime();
+                if(clickUtils.isFastClick()){
+                    setTime();
+                }
                 break;
         }
     }
@@ -188,7 +201,7 @@ public class AccountActivity extends AppCompatActivity implements View.OnClickLi
                 }
                 map.put("channel", "POS");
                 map.put("machineID", baseModel.getMachineID());
-                map.put("operatorId", "123");
+                map.put("operatorId", baseModel.getOperatorId());
                 map.put("data", jsonObject);
                 resultData = httpUtils.baseHttp(AccountActivity.this, baseModel, "qrySum", map);
                 returnedValue(resultData);
@@ -221,7 +234,7 @@ public class AccountActivity extends AppCompatActivity implements View.OnClickLi
                        }
                        t.setParam2(String.valueOf(jsonObject3.getDouble("gather")));
                        t.setParam3(String.valueOf(jsonObject3.getDouble("refund")));
-                       t.setParam4(String.valueOf(jsonObject3.getDouble("gather")-jsonObject3.getDouble("refund")));
+                       t.setParam4(doubleToString(jsonObject3.getDouble("gather")-jsonObject3.getDouble("refund")));
                        checkParameterModels.add(t);
                    }
                }
@@ -284,5 +297,13 @@ public class AccountActivity extends AppCompatActivity implements View.OnClickLi
         }
         return super.onKeyDown(keyCode, event);
     }
-
+    /**
+     * double转String,保留小数点后两位
+     * @param num
+     * @return
+     */
+    public static String doubleToString(double num){
+        //使用0.00不足位补0，#.##仅保留有效位
+        return new DecimalFormat("0.00").format(num);
+    }
 }

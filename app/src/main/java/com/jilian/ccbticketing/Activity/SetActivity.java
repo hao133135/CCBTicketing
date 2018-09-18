@@ -21,6 +21,7 @@ import com.ccb.deviceservice.aidl.deviceinfo.IDeviceInfo;
 import com.jilian.ccbticketing.Model.BaseModel;
 import com.jilian.ccbticketing.R;
 import com.jilian.ccbticketing.Uitls.Configuration;
+import com.jilian.ccbticketing.Uitls.clickUtils;
 
 public class SetActivity extends AppCompatActivity implements View.OnClickListener {
     public  final static String SER_KEY = "com.jilian.ccbticketing.Model.SettingModel";
@@ -88,10 +89,14 @@ public class SetActivity extends AppCompatActivity implements View.OnClickListen
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.set_page_back_btn:
-                backBtn();
+                if(clickUtils.isFastClick()) {
+                    backBtn();
+                }
                 break;
             case R.id.set_save_btn:
-                successMethod();
+                if(clickUtils.isFastClick()) {
+                    successMethod();
+                }
                 break;
         }
     }
@@ -135,6 +140,7 @@ public class SetActivity extends AppCompatActivity implements View.OnClickListen
         baseModel.setIp(ip.getText().toString());
         baseModel.setPort(port.getText().toString());
         baseModel.setMachineID(machineID.getText().toString());
+        baseModel.setOperatorId(posUserEd.getText().toString());
         SharedPreferences sp=getSharedPreferences("config",0);
         SharedPreferences.Editor editor=sp.edit();
         //把数据进行保存

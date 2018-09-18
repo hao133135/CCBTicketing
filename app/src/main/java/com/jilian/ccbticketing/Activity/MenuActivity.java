@@ -12,6 +12,7 @@ import com.jilian.ccbticketing.Activity.Query.QueryActivity;
 import com.jilian.ccbticketing.Activity.Sell.SellActivity;
 import com.jilian.ccbticketing.R;
 import com.jilian.ccbticketing.Uitls.Configuration;
+import com.jilian.ccbticketing.Uitls.clickUtils;
 
 public class MenuActivity  extends AppCompatActivity implements View.OnClickListener {
     private Button sellBtn,checkBtn,queryBtn,setBtn,sBtn;
@@ -39,18 +40,26 @@ public class MenuActivity  extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.ticketing_menu_sell_btn:
-                toSellActivity();
+                if (clickUtils.isFastClick()) {
+                    toSellActivity();
+                }
                 break;
             case R.id.ticketing_menu_check_btn:
-                toCheckActivity();
+                if (clickUtils.isFastClick()) {
+                    toCheckActivity();
+                }
                 break;
             case R.id.ticketing_menu_query_btn:
-                toQueryActivity();
+                if(clickUtils.isFastClick()) {
+                    toQueryActivity();
+                }
                 break;
             case R.id.ticketing_menu_set_btn:
-                toSetActivity();
+                if(clickUtils.isFastClick()) {
+                    toSetActivity();
+                }
                 break;
         }
     }

@@ -11,6 +11,7 @@ import android.widget.ImageButton;
 
 import com.jilian.ccbticketing.R;
 import com.jilian.ccbticketing.Uitls.Configuration;
+import com.jilian.ccbticketing.Uitls.clickUtils;
 
 public class SetMenuActivity  extends AppCompatActivity implements View.OnClickListener {
     private Button setBtn,exBtn;
@@ -37,13 +38,19 @@ public class SetMenuActivity  extends AppCompatActivity implements View.OnClickL
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.query_set_btn:
-                toSetPage();
+                if(clickUtils.isFastClick()) {
+                    toSetPage();
+                }
                 break;
             case R.id.query_ex_btn:
-                EXIT();
+                if(clickUtils.isFastClick()) {
+                    EXIT();
+                }
                 break;
             case R.id.set_page_back_btn:
-                backBtn();
+                if(clickUtils.isFastClick()){
+                    backBtn();
+                }
                 break;
         }
     }

@@ -14,7 +14,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -39,6 +38,7 @@ import com.jilian.ccbticketing.Uitls.Commontools;
 import com.jilian.ccbticketing.Uitls.Configuration;
 import com.jilian.ccbticketing.Uitls.Constant;
 import com.jilian.ccbticketing.Uitls.HttpUtils;
+import com.jilian.ccbticketing.Uitls.clickUtils;
 import com.jilian.ccbticketing.Uitls.zxing.activity.CaptureActivity;
 
 import org.json.JSONArray;
@@ -100,12 +100,6 @@ public class CheckActivity extends Commontools implements View.OnClickListener,C
         guideName = findViewById(R.id.check_guide_name);
         guideID = findViewById(R.id.check_guide_ID);
         guideLayout = findViewById(R.id.check_guide_layout);
-        if (guideModels.size()!=0)
-        {
-           /* guideName.setText(guideModels.get(0).getName());
-            guideID.setText(guideModels.get(0).getId());
-            guideLayout.setVisibility(View.VISIBLE);*/
-        }
         scanBtn.setOnClickListener(this);
         queryBtn.setOnClickListener(this);
         confirmBtn.setOnClickListener(this);
@@ -116,50 +110,59 @@ public class CheckActivity extends Commontools implements View.OnClickListener,C
         String mac = sharedPreferences.getString("mac","");
         String serialNo = sharedPreferences.getString("serialNo","");
         String token = sharedPreferences.getString("token","");
+        String operatorId = sharedPreferences.getString("posuser","");
         baseModel=new BaseModel();
         baseModel.setIp(serviceip);
         baseModel.setPort(serviceport);
         baseModel.setMachineID(mac);
         baseModel.setSerialNo(serialNo);
         baseModel.setToken(token);
+        baseModel.setOperatorId(operatorId);
+        handler.post(closeGuide);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.check_scan_btn:
-                scanMethod();
+                if(clickUtils.isFastClick()){
+                    scanMethod();
+                }
                 break;
             case R.id.check_query_btn:
-                if (editText.getText().toString()!=null &&!"".equals(editText.getText().toString()))
-                {
-                    barcode= editText.getText().toString();
-                    getData();
-                }else {
-                    msg = "请扫码或者输入二维码";
-                    handler.post(toast);
+                if(clickUtils.isFastClick()) {
+                    if (editText.getText().toString() != null && !"".equals(editText.getText().toString())) {
+                        barcode = editText.getText().toString();
+                        getData();
+                    } else {
+                        msg = "请扫码或者输入二维码";
+                        handler.post(toast);
+                    }
                 }
                 break;
             case R.id.check_confirm_btn:
-                if (editText.getText().toString()!=null&&!"".equals(editText.getText().toString()))
-                {
-                    successMethod();
-                }else {
-                    msg = "请扫码或者输入二维码";
-                    handler.post(toast);
+                if(clickUtils.isFastClick()) {
+                    if (editText.getText().toString() != null && !"".equals(editText.getText().toString())) {
+                        successMethod();
+                    } else {
+                        msg = "请扫码或者输入二维码";
+                        handler.post(toast);
+                    }
                 }
                 break;
             case R.id.check_page_back_btn:
-                backBtn();
+                if(clickUtils.isFastClick()){
+                    backBtn();
+                }
                 break;
             case R.id.check_state_isCheck:
                 isTicketModels.clear();
-                for(int i=0;i<checkAdapter.mChecked.size();i++){
-                    if(checkAdapter.mChecked.get(i)){
+                paymentlist.clear();
+                for (int i = 0; i < checkAdapter.mChecked.size(); i++) {
+                    if (checkAdapter.mChecked.get(i)) {
                         isTicketModels.add(ticketModels.get(i));
                     }
                 }
-                paymentlist.clear();
                 listViewClick();
                 break;
         }
@@ -173,17 +176,36 @@ public class CheckActivity extends Commontools implements View.OnClickListener,C
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
+        map.clear();
         map.put("channel","POS");
         map.put("machineID",baseModel.getMachineID());
-        map.put("operatorId","123");
+        map.put("operatorId",baseModel.getOperatorId());
         map.put("data",data);
         new Thread(new Runnable() {
             @Override
             public void run() {
                 resultData = httpUtils.baseHttp(CheckActivity.this,baseModel,"qryOrder",map);
-                // resultData = "{\"code\":200,\"msg\":\"success\",\"data\":{\"tickets\":[{\"ispay\":true,\"price\":200,\"name\":\"门票-成人\",\"paytime\":\"2018-08-15\",\"id\":\"B00188F9V85JDM8K\",\"isCheck\":0,\"isRefund\":0},{\"ispay\":true,\"price\":100,\"name\":\"门票-儿童半价\",\"paytime\":\"2018-08-15\",\"id\":\"B00188F97Z9KPYZ2\",\"isCheck\":0,\"isRefund\":0}],\"PID\":[{\"name\":\"王五\",\"id\":\"123123123123123\"}],\"payOrder\":\"A00188F9V85D958K\"}}";
-                //resultData ="{\"code\":200,\"msg\":\"success\",\"data\":{\"tickets\":[{\"date\":\"2018-08-20 00:00:00\",\"isCheck\":0,\"ispay\":true,\"price\":0,\"isRefund\":0,\"name\":\"门票-军人\",\"paytime\":\"2018-08-20\",\"id\":\"B00188LW4RMKL4ZY\"},{\"date\":\"2018-08-20 00:00:00\",\"isCheck\":0,\"ispay\":true,\"price\":50,\"isRefund\":0,\"name\":\"门票-儿童半价\",\"paytime\":\"2018-08-20\",\"id\":\"B00188LP4ZJ7NVRY\"},{\"date\":\"2018-08-20 00:00:00\",\"isCheck\":0,\"ispay\":true,\"price\":60,\"isRefund\":0,\"name\":\"门票-残疾人\",\"paytime\":\"2018-08-20\",\"id\":\"B00188L9Y8P62JRM\"},{\"date\":\"2018-08-20 00:00:00\",\"isCheck\":0,\"ispay\":true,\"price\":100,\"isRefund\":0,\"name\":\"门票-成人\",\"paytime\":\"2018-08-20\",\"id\":\"B00188L97899Y582\"},{\"date\":\"2018-08-20 00:00:00\",\"isCheck\":1,\"ispay\":true,\"price\":100,\"isRefund\":0,\"name\":\"门票-成人\",\"paytime\":\"2018-08-20\",\"id\":\"B00188LEXRNJ6K8Y\"},{\"date\":\"2018-08-20 00:00:00\",\"isCheck\":1,\"ispay\":true,\"price\":0,\"isRefund\":0,\"name\":\"门票-军人\",\"paytime\":\"2018-08-20\",\"id\":\"B00188LPJREJY48M\"},{\"date\":\"2018-08-20 00:00:00\",\"isCheck\":1,\"ispay\":true,\"price\":60,\"isRefund\":0,\"name\":\"门票-学生\",\"paytime\":\"2018-08-20\",\"id\":\"B00188LM782KNMRW\"},{\"date\":\"2018-08-20 00:00:00\",\"isCheck\":1,\"ispay\":true,\"price\":60,\"isRefund\":0,\"name\":\"门票-残疾人\",\"paytime\":\"2018-08-20\",\"id\":\"B00188L9VR1N9M8M\"},{\"date\":\"2018-08-20 00:00:00\",\"isCheck\":1,\"ispay\":true,\"price\":0,\"isRefund\":0,\"name\":\"门票-老人\",\"paytime\":\"2018-08-20\",\"id\":\"B00188L2DRY6LLZK\"},{\"date\":\"2018-08-20 00:00:00\",\"isCheck\":1,\"ispay\":true,\"price\":60,\"isRefund\":0,\"name\":\"门票-学生\",\"paytime\":\"2018-08-20\",\"id\":\"B00188LG2RXLJ6RN\"},{\"date\":\"2018-08-20 00:00:00\",\"isCheck\":1,\"ispay\":true,\"price\":0,\"isRefund\":0,\"name\":\"门票-儿童免票\",\"paytime\":\"2018-08-20\",\"id\":\"B00188L42RG6DWZ7\"},{\"date\":\"2018-08-20 00:00:00\",\"isCheck\":1,\"ispay\":true,\"price\":50,\"isRefund\":0,\"name\":\"门票-儿童半价\",\"paytime\":\"2018-08-20\",\"id\":\"B00188LKWZLN7YRN\"},{\"date\":\"2018-08-20 00:00:00\",\"isCheck\":1,\"ispay\":true,\"price\":100,\"isRefund\":0,\"name\":\"门票-成人\",\"paytime\":\"2018-08-20\",\"id\":\"B00188LV6ZK9KJZJ\"},{\"date\":\"2018-08-20 00:00:00\",\"isCheck\":1,\"ispay\":true,\"price\":100,\"isRefund\":0,\"name\":\"门票-成人\",\"paytime\":\"2018-08-20\",\"id\":\"B00188L9VR56LYZK\"},{\"date\":\"2018-08-20 00:00:00\",\"isCheck\":1,\"ispay\":true,\"price\":50,\"isRefund\":0,\"name\":\"门票-儿童半价\",\"paytime\":\"2018-08-20\",\"id\":\"B00188L9QZ6X6X8K\"},{\"date\":\"2018-08-20 00:00:00\",\"isCheck\":1,\"ispay\":true,\"price\":0,\"isRefund\":0,\"name\":\"门票-老人\",\"paytime\":\"2018-08-20\",\"id\":\"B00188LYQ8QXYJRX\"},{\"date\":\"2018-08-20 00:00:00\",\"isCheck\":1,\"ispay\":true,\"price\":0,\"isRefund\":0,\"name\":\"门票-儿童免票\",\"paytime\":\"2018-08-20\",\"id\":\"B00188LVXR4LJ9RW\"}],\"payOrder\":\"A00188LV6RK91JRJ\"}}";
+                 //resultData = "{\"code\":200,\"msg\":\"success\",\"data\":{\"tickets\":[{\"ispay\":true,\"price\":200,\"name\":\"门票-成人\",\"paytime\":\"2018-08-15\",\"id\":\"B00188F9V85JDM8K\",\"isCheck\":0,\"isRefund\":0},{\"ispay\":true,\"price\":100,\"name\":\"门票-儿童半价\",\"paytime\":\"2018-08-15\",\"id\":\"B00188F97Z9KPYZ2\",\"isCheck\":0,\"isRefund\":0}],\"PID\":{\"id\":\"511523189626579765\",\"name\":\"李四\"}}";
+                /*resultData ="{\"code\":200,\"msg\":\"success\"" +
+                        ",\"data\":{\"tickets\":[" +
+                        "{\"date\":\"2018-08-20 00:00:00\",\"isCheck\":0,\"ispay\":true,\"price\":0,\"isRefund\":0,\"name\":\"门票-军人\",\"paytime\":\"2018-08-20\",\"id\":\"B00188LW4RMKL4ZY\"}" +
+                        ",{\"date\":\"2018-08-20 00:00:00\",\"isCheck\":0,\"ispay\":true,\"price\":50,\"isRefund\":0,\"name\":\"门票-儿童半价\",\"paytime\":\"2018-08-20\",\"id\":\"B00188LP4ZJ7NVRY\"}" +
+                        ",{\"date\":\"2018-08-20 00:00:00\",\"isCheck\":0,\"ispay\":true,\"price\":60,\"isRefund\":0,\"name\":\"门票-残疾人\",\"paytime\":\"2018-08-20\",\"id\":\"B00188L9Y8P62JRM\"}" +
+                        ",{\"date\":\"2018-08-20 00:00:00\",\"isCheck\":0,\"ispay\":true,\"price\":100,\"isRefund\":0,\"name\":\"门票-成人\",\"paytime\":\"2018-08-20\",\"id\":\"B00188L97899Y582\"}" +
+                        ",{\"date\":\"2018-08-20 00:00:00\",\"isCheck\":1,\"ispay\":true,\"price\":100,\"isRefund\":0,\"name\":\"门票-成人\",\"paytime\":\"2018-08-20\",\"id\":\"B00188LEXRNJ6K8Y\"}" +
+                        ",{\"date\":\"2018-08-20 00:00:00\",\"isCheck\":1,\"ispay\":true,\"price\":0,\"isRefund\":0,\"name\":\"门票-军人\",\"paytime\":\"2018-08-20\",\"id\":\"B00188LPJREJY48M\"}" +
+                        ",{\"date\":\"2018-08-20 00:00:00\",\"isCheck\":1,\"ispay\":true,\"price\":60,\"isRefund\":0,\"name\":\"门票-学生\",\"paytime\":\"2018-08-20\",\"id\":\"B00188LM782KNMRW\"}" +
+                        ",{\"date\":\"2018-08-20 00:00:00\",\"isCheck\":1,\"ispay\":true,\"price\":60,\"isRefund\":0,\"name\":\"门票-残疾人\",\"paytime\":\"2018-08-20\",\"id\":\"B00188L9VR1N9M8M\"}" +
+                        ",{\"date\":\"2018-08-20 00:00:00\",\"isCheck\":1,\"ispay\":true,\"price\":0,\"isRefund\":0,\"name\":\"门票-老人\",\"paytime\":\"2018-08-20\",\"id\":\"B00188L2DRY6LLZK\"}" +
+                        ",{\"date\":\"2018-08-20 00:00:00\",\"isCheck\":1,\"ispay\":true,\"price\":60,\"isRefund\":0,\"name\":\"门票-学生\",\"paytime\":\"2018-08-20\",\"id\":\"B00188LG2RXLJ6RN\"}" +
+                        ",{\"date\":\"2018-08-20 00:00:00\",\"isCheck\":1,\"ispay\":true,\"price\":0,\"isRefund\":0,\"name\":\"门票-儿童免票\",\"paytime\":\"2018-08-20\",\"id\":\"B00188L42RG6DWZ7\"}" +
+                        ",{\"date\":\"2018-08-20 00:00:00\",\"isCheck\":1,\"ispay\":true,\"price\":50,\"isRefund\":0,\"name\":\"门票-儿童半价\",\"paytime\":\"2018-08-20\",\"id\":\"B00188LKWZLN7YRN\"}" +
+                        ",{\"date\":\"2018-08-20 00:00:00\",\"isCheck\":1,\"ispay\":true,\"price\":100,\"isRefund\":0,\"name\":\"门票-成人\",\"paytime\":\"2018-08-20\",\"id\":\"B00188LV6ZK9KJZJ\"}" +
+                        ",{\"date\":\"2018-08-20 00:00:00\",\"isCheck\":1,\"ispay\":true,\"price\":100,\"isRefund\":0,\"name\":\"门票-成人\",\"paytime\":\"2018-08-20\",\"id\":\"B00188L9VR56LYZK\"}" +
+                        ",{\"date\":\"2018-08-20 00:00:00\",\"isCheck\":1,\"ispay\":true,\"price\":50,\"isRefund\":0,\"name\":\"门票-儿童半价\",\"paytime\":\"2018-08-20\",\"id\":\"B00188L9QZ6X6X8K\"}" +
+                        ",{\"date\":\"2018-08-20 00:00:00\",\"isCheck\":1,\"ispay\":true,\"price\":0,\"isRefund\":0,\"name\":\"门票-老人\",\"paytime\":\"2018-08-20\",\"id\":\"B00188LYQ8QXYJRX\"}" +
+                        ",{\"date\":\"2018-08-20 00:00:00\",\"isCheck\":1,\"ispay\":true,\"price\":0,\"isRefund\":0,\"name\":\"门票-儿童免票\",\"paytime\":\"2018-08-20\",\"id\":\"B00188LVXR4LJ9RW\"}]" +
+                        ",\"PID\":{\"id\":\"511523189626579765\",\"name\":\"李四\"},\"payOrder\":\"A00188LV6RK91JRJ\"}}";*/
                 returnedValue(resultData,"query");
             }
         }).start();
@@ -200,7 +222,6 @@ public class CheckActivity extends Commontools implements View.OnClickListener,C
             super.onPostExecute(ticketModels);
             if(ticketModels.size()!=0){
                 ticketlistViewClick();
-                listViewClick();
             }else {
                 return;
             }
@@ -232,16 +253,6 @@ public class CheckActivity extends Commontools implements View.OnClickListener,C
         myArrayAdapter = new PaymentAdapter<DetailsModel>
                 (CheckActivity.this,paymentlist,R.layout.share_items);
         detailsLists.setAdapter(myArrayAdapter);
-        detailsLists.setOnItemClickListener( new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(final AdapterView<?> parent, final View view, final int position, long id) {
-
-                // 进行点击事件后的逻辑操作
-                myArrayAdapter.setSelectedItem(position);
-                myArrayAdapter.notifyDataSetChanged();
-            }
-
-        });
 
     }
     private void ticketlistViewClick() {
@@ -254,7 +265,7 @@ public class CheckActivity extends Commontools implements View.OnClickListener,C
                 isTicketModels.add(ticketModels.get(i));
             }
         }
-
+        listViewClick();
     }
 
     private void returnedValue(String data,String ms) {
@@ -267,6 +278,7 @@ public class CheckActivity extends Commontools implements View.OnClickListener,C
                         JSONObject tickets = jsonObject.getJSONObject("data");
                         ticketModels.clear();
                         paymentlist.clear();
+                        guideModels.clear();
                         JSONArray jsonArray = (JSONArray) tickets.get("tickets");
                         for (int i = 0; i < jsonArray.length(); i++) {
                             JSONObject jsonObject1 = (JSONObject) jsonArray.get(i);
@@ -276,13 +288,15 @@ public class CheckActivity extends Commontools implements View.OnClickListener,C
                         if(ticketModels.size()>0) {
                             new paymentTask().execute();
                         }
-                        JSONArray jsonArray1 = tickets.getJSONArray("PID");
-                        JSONObject jsonObject1 = (JSONObject) jsonArray1.get(0);
+                        JSONObject jsonObject1 = tickets.getJSONObject("PID");
                         if (jsonObject1 != null) {
                             guideModels.add(new GuideModel(jsonObject1.getString("name"), jsonObject1.getString("id"), ""));
                             handler.post(openGuide);
+                        }else {
+                            handler.post(closeGuide);
                         }
                     } catch (JSONException e) {
+                        handler.post(closeGuide);
                         e.printStackTrace();
                     }
                 }if (ms.equals("check")) {
@@ -299,7 +313,7 @@ public class CheckActivity extends Commontools implements View.OnClickListener,C
                     }
                 }
             }else if(jsonObject.getInt("code")==201)
-            {
+             {
                 SharedPreferences sp = getSharedPreferences("config", 0);
                 SharedPreferences.Editor editor = sp.edit();
                 //把数据进行保存
@@ -382,9 +396,10 @@ public class CheckActivity extends Commontools implements View.OnClickListener,C
                     e.printStackTrace();
                     return;
                 }
+                map.clear();
                 map.put("channel","POS");
                 map.put("machineID",baseModel.getMachineID());
-                map.put("operatorId","123");
+                map.put("operatorId",baseModel.getOperatorId());
                 map.put("data",data);
                 resultCheckData = httpUtils.baseHttp(CheckActivity.this,baseModel,"chkOrder",map);
                 returnedValue(resultCheckData,"check");
